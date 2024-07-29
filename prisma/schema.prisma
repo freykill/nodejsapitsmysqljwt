@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model atenciones {
+  id_ticket      Int       @id
+  id_cita        Int?
+  id_servicio    Int?
+  fecha_atencion DateTime? @db.Date
+  detalle        String?   @db.Text
+  servicio       servicio? @relation(fields: [id_servicio], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "atenciones_ibfk_1")
+  citas          citas?    @relation(fields: [id_cita], references: [id_cita], onDelete: NoAction, onUpdate: NoAction, map: "atenciones_ibfk_2")
+
+  @@index([id_cita], map: "id_cita")
+  @@index([id_servicio], map: "id_servicio")
+}
+
+model auth {
+  id       Int     @id  @default(autoincrement())
+  usuario  String @db.VarChar(45) @unique
+  password String @db.VarChar(200)
+}
+
+model citas {
+  id_cita    Int          @id
+  id_cliente Int?
+  estado     String?      @db.VarChar(20)
+  fecha      DateTime?    @db.Date
+  hora       DateTime?    @db.Time(0)
+  atenciones atenciones[]
+
+  @@index([id_cliente], map: "id_cliente")
+}
+
+model clientes {
+  id      Int     @id @default(autoincrement())
+  nombre  String? @db.VarChar(100)
+  celular String? @db.VarChar(15)
+  email   String? @db.VarChar(100)
+}
+
+model servicio {
+  id          Int          @id
+  nombre      String?      @db.VarChar(50)
+  descripcion String?      @db.Text
+  precio      Decimal?     @db.Decimal(10, 2)
+  atenciones  atenciones[]
+}
+
+model usuarios {
+  id     Int     @id @default(autoincrement())
+  nombre String? @db.VarChar(50)
+  activo Int?
+}
