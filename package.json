@@ -7,8 +7,7 @@
     "build": "rimraf .dist && tsc",
     "start": "node dist/server.js",
     "migrate": "prisma migrate deploy --schema ./prisma/schema.prisma",
-    "generate": "prisma generate --schema ./prisma/schema.prisma",
-    "postinstall": "npm run migrate && npm run generate"
+    "postinstall": "npm run migrate dev"
   },
   "author": "",
   "license": "ISC",
