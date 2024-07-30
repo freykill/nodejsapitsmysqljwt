@@ -56,7 +56,7 @@ export const getUsuariById = async (req: Request,res: Response): Promise<void> =
     const userId = parseInt(req.params.id);
     const usuario = await prisma.findUnique({
       where: {
-        id: userId,
+        id_cliente: userId,
       },
     });
 
@@ -92,7 +92,7 @@ export const updateUsuario = async (req: Request,res: Response): Promise<void> =
 
     const usuario = await prisma.update({
       where: {
-        id: userId
+        id_cliente: userId
       },
       data: dataToUpdate
     })
@@ -110,7 +110,7 @@ export const deleteUsuario = async (req: Request,res: Response): Promise<void> =
 try {
   await prisma.delete({
     where: {
-      id: userId
+      id_cliente: userId
     }
   })
 

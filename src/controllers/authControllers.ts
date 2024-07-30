@@ -5,23 +5,23 @@ import { generateToken } from "../services/auth.services";
 import { error } from "console";
 
 export const register = async (req: Request, res: Response): Promise<void> => {
-  const { usuario, password } = req.body;
+  const { user, password } = req.body;
 
   try {
     const hashedPassword = await hashPassword(password);
 
-    const user = await prisma.create({
+    const usuario = await prisma.create({
       data: {
-        usuario,
+        user,
         password: hashedPassword,
       },
     });
 
-    const token = generateToken(user);
+    const token = generateToken(usuario);
     res.status(201).json({token});
   } catch (error:any) {
 
-    if(!usuario){
+    if(!user){
         res.status(400).json({message: 'el email es obligatorio'})
     }
     
@@ -40,12 +40,12 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const login = async (req:Request,res:Response):Promise<void> =>{
-    const { usuario, password } = req.body;
-
+    const { user, password } = req.body;
+    console.log("si")
     try{
 
-        
-        if (!usuario) {
+
+        if (!user) {
             res.status(400).json({ message: 'El usuario es obligatorio' })
             return
         }
@@ -53,14 +53,22 @@ export const login = async (req:Request,res:Response):Promise<void> =>{
             res.status(400).json({ message: 'El password es obligatorio' })
             return
         }
+        console.log(user)
+        const usuario = await prisma.findUnique(
+          {
+            where:{
+              user
+            }
+          })
 
-        const user = await prisma.findUnique({where:{usuario}})
-        if(!user){
+          console.log(usuario)
+
+        if(!usuario){
             res.status(404).json({error:'Usuario no encontrado'})
             return
         }
 
-        const passwordMatch = await comparePasswords(password,user.password) /// comparador de contrasenas
+        const passwordMatch = await comparePasswords(password,usuario.password) /// comparador de contrasenas
         if(!passwordMatch){
             res.status(401).json({error:'usuario y contrasena no coinciden'})
         }
