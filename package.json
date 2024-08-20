@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsnd --respawn --clear src/server.ts",
-    "build": "rimraf .dist && tsc npm start",
+    "build": "rimraf .dist",
     "start": "node dist/server.js"
   },
   "author": "",
